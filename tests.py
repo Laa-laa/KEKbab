@@ -1,27 +1,37 @@
 import unittest
+import requests
 
-class TestBorneCommande(unittest.TestCase):
-    def test_affichage_ingredients(self):
+class TestAPI(unittest.TestCase):
+    def test_affichage_ingredients_borne(self):
+        response = requests.get('http://127.0.0.1:5000/borne_commande')
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('ingredients', data)
 
-        pass
+    def test_ajout_ingredient_borne(self):
+        ingredient = {'ingredient': 'viande'}
+        response = requests.post('http://127.0.0.1:5000/borne_commande', json=ingredient)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data['message'], 'Ingrédient ajouté au ticket')
 
-    def test_ajout_ingredient_ticket(self):
+    def test_affichage_commande_cuisine(self):
+        response = requests.get('http://127.0.0.1:5000/ecran_cuisine')
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('commande', data)
 
-        pass
+    def test_effacer_commande_cuisine(self):
+        response = requests.delete('http://127.0.0.1:5000/ecran_cuisine')
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data['message'], 'Commande effacée de l\'écran')
 
-class TestEcranCuisine(unittest.TestCase):
-    def test_affichage_ingredients_commande(self):
+    def test_calcul_nombre_total_kebab(self):
+        ingredients = {'ingredients': ['viande', 'salade', 'tomate']}
+        response = requests.post('http://127.0.0.1:5000/kebab', json=ingredients)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn('nombre_total', data)
 
-        pass
 
-    def test_bouton_effacement_commande(self):
-
-        pass
-
-class TestKebab(unittest.TestCase):
-    def test_calcul_nombre_total(self):
-
-        pass
-
-if __name__ == '__main__':
-    unittest.main()
